@@ -1,0 +1,120 @@
+.start {
+  width: 1.5vw;
+  height: 1.5vw;
+  background-image: url(./Arrow_right.png);
+  background-size: cover;
+  animation-name: stretchPath;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+.arrow-up {
+  background-image: url(./Arrow_up.png);
+  background-size: cover;
+}
+
+.arrow-down {
+  background-image: url(./Arrow_down.png);
+  background-size: cover;
+}
+
+.arrow-left {
+  background-image: url(./Arrow_left.png);
+  background-size: cover;
+}
+
+.arrow-right {
+  background-image: url(./Arrow_right.png);
+  background-size: cover;
+}
+
+.end {
+  width: 1.5vw;
+  height: 1.5vw;
+  background-image: url(./Target.png);
+  background-size: cover;
+  animation-name: stretchPath;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+.wall {
+  width: 1.5vw;
+  height: 1.5vw;
+  background-color: #30323d;
+  animation-name: stretchWall;
+  animation-duration: 0.15s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes stretchWall {
+  0% {
+    transform: scale(0.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.visited {
+  width: 1.5vw;
+  height: 1.5vw;
+  background-color: #02c39a;
+  animation-name: stretchVisit;
+  animation-duration: 0.5s;
+}
+
+@keyframes stretchVisit {
+  0% {
+    transform: scale(0.5);
+    border-radius: 20%;
+    background-color: purple;
+  }
+  50% {
+    background-color: #028090;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.path {
+  width: 1.5vw;
+  height: 1.5vw;
+  background-color: rgb(255, 254, 106);
+  animation-name: stretchPath;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes stretchPath {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.navbar-hamburger {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background: no-repeat center center;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,<svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path stroke='rgba(255,255,255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+#basic-nav-dropdown {
+  color: white;
+  text-decoration: none !important;
+}
