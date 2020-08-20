@@ -12,7 +12,9 @@ import {
   toggleInteraction,
   toggleSolved,
   addMazeWall,
+  recursiveBackTrackStartEnd,
 } from "../../actions";
+
 import Row from "./Row";
 
 const Grid = ({
@@ -33,6 +35,8 @@ const Grid = ({
   toggleSolved,
   mazeTimeline,
   addMazeWall,
+  unvisitTimeline,
+  recursiveBackTrackStartEnd,
 }) => {
   useEffect(() => {
     getGrid(window);
@@ -102,11 +106,29 @@ const Grid = ({
             addMazeWall(grid, mazeTimeline);
             toggleInteraction();
           }
-        }, 5 * i);
+        }, 10 * i);
       }
     }
     // eslint-disable-next-line
   }, [mazeTimeline]);
+
+  useEffect(() => {
+    if (unvisitTimeline.length !== 0) {
+      toggleInteraction();
+      setTimeout(() => {
+        for (let i = 0; i < unvisitTimeline.length; i++) {
+          setTimeout(() => {
+            document.getElementById(unvisitTimeline[i]).className = "unvisited";
+            if (i === unvisitTimeline.length - 1) {
+              recursiveBackTrackStartEnd(unvisitTimeline, grid);
+              toggleInteraction();
+            }
+          }, 10 * i);
+        }
+      }, 1000);
+    }
+    // eslint-disable-next-line
+  }, [unvisitTimeline]);
 
   return (
     <div
@@ -165,7 +187,8 @@ const mapPropsToState = (state) => {
     shortestPath: state.shortestPath.path,
     visitTimeline: state.shortestPath.visitTimeline,
     disableKey: state.process.running,
-    mazeTimeline: state.mazeTimeline,
+    mazeTimeline: state.mazeTimeline.recursiveDivision,
+    unvisitTimeline: state.mazeTimeline.recursiveBackTrack,
   };
 };
 
@@ -180,4 +203,5 @@ export default connect(mapPropsToState, {
   toggleInteraction,
   toggleSolved,
   addMazeWall,
+  recursiveBackTrackStartEnd,
 })(Grid);

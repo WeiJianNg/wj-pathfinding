@@ -11,6 +11,8 @@ import {
   toggleSolved,
   updateStartEnd,
   updateMazeTimeLine,
+  recursiveBackTrackInit,
+  updateMazeTimeLine2,
 } from "../../actions/index";
 
 const PathSettings = ({
@@ -28,6 +30,8 @@ const PathSettings = ({
   selectPathFindingAlgo,
   toggleSolved,
   updateMazeTimeLine,
+  recursiveBackTrackInit,
+  updateMazeTimeLine2,
 }) => {
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
@@ -56,6 +60,18 @@ const PathSettings = ({
           </NavDropdown.Item>
         </NavDropdown>
         <NavDropdown title="Maze Algorithm" id="basic-nav-dropdown">
+          <NavDropdown.Item
+            onClick={() => {
+              if (!disableKey) {
+                resetGrid(numRow, numCol, "1,1", `${numRow - 2},${numCol - 2}`);
+                toggleSolved(false);
+                recursiveBackTrackInit(grid);
+                updateMazeTimeLine2(numCol, numRow, "1,1");
+              }
+            }}
+          >
+            Recursive BackTracking
+          </NavDropdown.Item>
           <NavDropdown.Item
             onClick={() => {
               if (!disableKey) {
@@ -142,4 +158,6 @@ export default connect(mapStateToProps, {
   toggleSolved,
   updateStartEnd,
   updateMazeTimeLine,
+  recursiveBackTrackInit,
+  updateMazeTimeLine2,
 })(PathSettings);

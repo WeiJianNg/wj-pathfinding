@@ -1,4 +1,3 @@
-import { calculateDistance } from "./pathfinding";
 export const recursiveDivision = (
   numCol,
   numRow,
@@ -23,12 +22,6 @@ export const recursiveDivision = (
     skew,
     wallArray
   );
-
-  let midpoint = `${Math.floor(numRow / 2)},${Math.floor(numCol / 2)}`;
-
-  wallArray.sort((a, b) => {
-    return calculateDistance(a, midpoint) - calculateDistance(b, midpoint);
-  });
 
   return wallArray;
 };
@@ -215,5 +208,99 @@ const chooseOrientation = (numRow, numCol, skew = null) => {
     } else {
       return orientation[1];
     }
+  }
+};
+
+export const recursiveBackTrack = (numCol, numRow, startCoord) => {
+  let unvisitArray = [];
+  // Create a dict to hold all coord
+  let grid = {};
+  for (let i = 0; i < numRow; i++) {
+    for (let j = 0; j < numCol; j++) {
+      grid[`${i},${j}`] = { state: "wall" };
+    }
+  }
+  let stack = [startCoord];
+  while (stack.length !== 0) {
+    let currentCell = stack.pop();
+    let validNeighbours = findNeighbouringNodes(
+      currentCell,
+      grid,
+      numRow,
+      numCol
+    );
+    while (validNeighbours.length !== 0) {
+      // Choose a random next cell to visit from valid Neighbours
+      let nextCellToVisit =
+        validNeighbours[Math.floor(validNeighbours.length * Math.random())];
+      // Open a path between the currentCell and the nextCellToVisit
+      [
+        currentCell,
+        cellBetween(currentCell, nextCellToVisit),
+        nextCellToVisit,
+      ].forEach((cell) => {
+        grid[cell].state = "unvisited";
+        unvisitArray.push(cell);
+      });
+      // Add nextCellToVisit to stack
+      stack.push(nextCellToVisit);
+
+      // Set nextCellToVisit as the currentCell
+      currentCell = nextCellToVisit;
+
+      // Re-evaluate valid neighbours
+      validNeighbours = findNeighbouringNodes(
+        currentCell,
+        grid,
+        numRow,
+        numCol
+      );
+    }
+  }
+
+  return unvisitArray;
+};
+
+const findNeighbouringNodes = (currentCell, grid, numRow, numCol) => {
+  let currentRow = parseInt(currentCell.split(",")[0]);
+  let currentCol = parseInt(currentCell.split(",")[1]);
+  let validNeighbours = [];
+  // Check Top Cell
+  if (currentRow - 2 >= 0) {
+    if (grid[`${currentRow - 2},${currentCol}`].state === "wall") {
+      validNeighbours.push(`${currentRow - 2},${currentCol}`);
+    }
+  }
+  // Check Bottom Cell
+  if (currentRow + 2 < numRow) {
+    if (grid[`${currentRow + 2},${currentCol}`].state === "wall") {
+      validNeighbours.push(`${currentRow + 2},${currentCol}`);
+    }
+  }
+  // Check Left Cell
+  if (currentCol - 2 >= 0) {
+    if (grid[`${currentRow},${currentCol - 2}`].state === "wall") {
+      validNeighbours.push(`${currentRow},${currentCol - 2}`);
+    }
+  }
+  // Check Right Cell
+  if (currentCol + 2 < numCol) {
+    if (grid[`${currentRow},${currentCol + 2}`].state === "wall") {
+      validNeighbours.push(`${currentRow},${currentCol + 2}`);
+    }
+  }
+  return validNeighbours;
+};
+
+const cellBetween = (coord1, coord2) => {
+  let row1 = parseInt(coord1.split(",")[0]);
+  let col1 = parseInt(coord1.split(",")[1]);
+  let row2 = parseInt(coord2.split(",")[0]);
+  let col2 = parseInt(coord2.split(",")[1]);
+
+  if (row1 === row2) {
+    return `${row1},${(col1 + col2) / 2}`;
+  } else {
+    return `${(row1 + row2) / 2},${col1}`;
   }
 };

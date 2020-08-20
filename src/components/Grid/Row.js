@@ -89,8 +89,10 @@ const Row = ({
               }}
               onClick={(event) => {
                 let coord = event.target.id;
-                if (event.target.className === "wall") {
-                  deleteWall(coord, grid);
+                if (!disableKey) {
+                  if (event.target.className === "wall") {
+                    deleteWall(coord, grid);
+                  }
                 }
               }}
             ></div>

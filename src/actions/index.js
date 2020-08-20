@@ -1,5 +1,5 @@
-import { pathFinding } from "../script/pathfinding";
-import { recursiveDivision } from "../script/maze";
+import { pathFinding, calculateDistance } from "../script/pathfinding";
+import { recursiveDivision, recursiveBackTrack } from "../script/maze";
 import _ from "lodash";
 
 export const getGrid = (window) => {
@@ -175,6 +175,25 @@ export const addVisit = (grid, visitArray) => {
   };
 };
 
+export const addUnvisited = (grid, visitArray) => {
+  let updatedGrid = { ...grid };
+  for (let i = 0; i < visitArray.length; i++) {
+    if (
+      grid[visitArray[i]].state !== "start" &&
+      grid[visitArray[i]].state !== "end"
+    ) {
+      grid[visitArray[i]].state = "unvisited";
+    }
+  }
+
+  return {
+    type: "ADD_UNVISITTOGRID",
+    payload: {
+      updatedGrid: updatedGrid,
+    },
+  };
+};
+
 export const addMazeWall = (grid, mazeTimeline) => {
   let updatedGrid = { ...grid };
   for (let i = 0; i < mazeTimeline.length; i++) {
@@ -203,9 +222,53 @@ export const updateMazeTimeLine = (
     method
   );
   return {
-    type: "UPDATE_MAZE_TIMELINE",
+    type: "UPDATE_MAZE_TIMELINE_DIV",
     payload: {
       mazeTimeline: wallArray,
+    },
+  };
+};
+
+export const updateMazeTimeLine2 = (numCol, numRow, startCoord) => {
+  let unVisitArray = recursiveBackTrack(numCol, numRow, startCoord);
+  return {
+    type: "UPDATE_MAZE_TIMELINE_BACK",
+    payload: {
+      unVisitTimeline: unVisitArray,
+    },
+  };
+};
+
+export const recursiveBackTrackInit = (grid) => {
+  let updatedGrid = { ...grid };
+  Object.keys(updatedGrid).forEach((coord) => {
+    updatedGrid[coord].state = "wall";
+  });
+  return {
+    type: "UPDATE_GRID",
+    payload: { updatedGrid: updatedGrid },
+  };
+};
+
+export const recursiveBackTrackStartEnd = (unVisitArray, grid) => {
+  unVisitArray.sort((a, b) => {
+    return calculateDistance("1,1", a) - calculateDistance("1,1", b);
+  });
+  let startCoord = "1,1";
+  let endCoord = unVisitArray[unVisitArray.length - 1];
+  let updatedGrid = { ...grid };
+  for (let i = 0; i < unVisitArray.length; i++) {
+    updatedGrid[unVisitArray[i]].state = "unvisited";
+  }
+  updatedGrid[startCoord].state = "start";
+  updatedGrid[endCoord].state = "end";
+
+  return {
+    type: "UPDATE_STARTEND",
+    payload: {
+      updatedGrid: updatedGrid,
+      start: startCoord,
+      end: endCoord,
     },
   };
 };

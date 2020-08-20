@@ -15,6 +15,7 @@ export default (
       };
     case "ADD_WALL":
     case "DELETE_WALL":
+    case "UPDATE_GRID":
       return {
         numCol: state.numCol,
         numRow: state.numRow,
@@ -41,6 +42,7 @@ export default (
       };
     case "ADD_PATHTOGRID":
     case "ADD_VISITTOGRID":
+    case "ADD_UNVISITTOGRID":
     case "ADD_MAZEWALL":
       return {
         numCol: state.numCol,
@@ -49,7 +51,14 @@ export default (
         start: state.start,
         end: state.end,
       };
-
+    case "UPDATE_STARTEND":
+      return {
+        numCol: state.numCol,
+        numRow: state.numRow,
+        grid: action.payload.updatedGrid,
+        start: action.payload.start,
+        end: action.payload.end,
+      };
     default:
       return state;
   }
