@@ -106,7 +106,7 @@ const Grid = ({
             addMazeWall(grid, mazeTimeline);
             toggleInteraction();
           }
-        }, 5 * i);
+        }, 15 * i);
       }
     }
     // eslint-disable-next-line
