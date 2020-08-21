@@ -13,6 +13,7 @@ import {
   updateMazeTimeLine,
   recursiveBackTrackInit,
   updateMazeTimeLine2,
+  updateMazeTimeLinePrim,
 } from "../../actions/index";
 
 const PathSettings = ({
@@ -26,12 +27,12 @@ const PathSettings = ({
   pathFindingAlgo,
   visualise,
   resetGrid,
-  updateStartEnd,
   selectPathFindingAlgo,
   toggleSolved,
   updateMazeTimeLine,
   recursiveBackTrackInit,
   updateMazeTimeLine2,
+  updateMazeTimeLinePrim,
 }) => {
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
@@ -70,7 +71,7 @@ const PathSettings = ({
               }
             }}
           >
-            Recursive BackTracking
+            Recursive Backtracking
           </NavDropdown.Item>
           <NavDropdown.Item
             onClick={() => {
@@ -104,6 +105,18 @@ const PathSettings = ({
             }}
           >
             Recursive Division (Horizontal Skew)
+          </NavDropdown.Item>
+          <NavDropdown.Item
+            onClick={() => {
+              if (!disableKey) {
+                resetGrid(numRow, numCol, "1,1", `${numRow - 2},${numCol - 2}`);
+                toggleSolved(false);
+                recursiveBackTrackInit(grid);
+                updateMazeTimeLinePrim(numCol, numRow);
+              }
+            }}
+          >
+            Prim's Algorithm
           </NavDropdown.Item>
         </NavDropdown>
         <Button
@@ -160,4 +173,5 @@ export default connect(mapStateToProps, {
   updateMazeTimeLine,
   recursiveBackTrackInit,
   updateMazeTimeLine2,
+  updateMazeTimeLinePrim,
 })(PathSettings);

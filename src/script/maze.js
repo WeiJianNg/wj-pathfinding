@@ -261,6 +261,64 @@ export const recursiveBackTrack = (numCol, numRow, startCoord) => {
   return unvisitArray;
 };
 
+export const primAlgorithm = (numCol, numRow) => {
+  let unvisitArray = [];
+  // Create a dict to hold all coord
+  let grid = {};
+  for (let i = 0; i < numRow; i++) {
+    for (let j = 0; j < numCol; j++) {
+      grid[`${i},${j}`] = { state: "wall" };
+    }
+  }
+  // Initialisation
+  // Select a random coord to begin
+  let gridCoords = Object.keys(grid);
+  let startCoord = gridCoords[Math.floor(gridCoords.length * Math.random())];
+
+  // Set startcoord to be unvisited
+  let currentCell = startCoord;
+  grid[currentCell].state = "unvisited";
+  unvisitArray.push(currentCell);
+
+  // Add neighbouring cells to stack
+  let stack = findNeighbouringNodes(currentCell, grid, numRow, numCol);
+
+  while (stack.length !== 0) {
+    stack = shuffle(stack);
+    let nextCellToVisit = stack.pop();
+    let frontierCell = findFrontierCell(
+      nextCellToVisit,
+      unvisitArray,
+      numRow,
+      numCol
+    );
+
+    [
+      frontierCell,
+      cellBetween(frontierCell, nextCellToVisit),
+      nextCellToVisit,
+    ].forEach((cell) => {
+      grid[cell].state = "unvisited";
+      unvisitArray.push(cell);
+    });
+
+    // Find Valid Neighbours for current cell and add to stack
+    let validNeighbours = findNeighbouringNodes(
+      nextCellToVisit,
+      grid,
+      numRow,
+      numCol
+    );
+
+    for (let i = 0; i < validNeighbours.length; i++) {
+      if (!stack.includes(validNeighbours[i])) {
+        stack.push(validNeighbours[i]);
+      }
+    }
+  }
+  return unvisitArray;
+};
+
 const findNeighbouringNodes = (currentCell, grid, numRow, numCol) => {
   let currentRow = parseInt(currentCell.split(",")[0]);
   let currentCol = parseInt(currentCell.split(",")[1]);
@@ -303,4 +361,45 @@ const cellBetween = (coord1, coord2) => {
   } else {
     return `${(row1 + row2) / 2},${col1}`;
   }
+};
+
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+const findFrontierCell = (currentCell, unvisitArray, numRow, numCol) => {
+  let adjacentCells = [];
+  let currentRow = parseInt(currentCell.split(",")[0]);
+  let currentCol = parseInt(currentCell.split(",")[1]);
+  // Check Top Cell
+  if (currentRow - 2 >= 0) {
+    if (unvisitArray.includes(`${currentRow - 2},${currentCol}`)) {
+      adjacentCells.push(`${currentRow - 2},${currentCol}`);
+    }
+  }
+  // Check Bottom Cell
+  if (currentRow + 2 < numRow) {
+    if (unvisitArray.includes(`${currentRow + 2},${currentCol}`)) {
+      adjacentCells.push(`${currentRow + 2},${currentCol}`);
+    }
+  }
+  // Check Left Cell
+  if (currentCol - 2 >= 0) {
+    if (unvisitArray.includes(`${currentRow},${currentCol - 2}`)) {
+      adjacentCells.push(`${currentRow},${currentCol - 2}`);
+    }
+  }
+  // Check Right Cell
+  if (currentCol + 2 < numCol) {
+    if (unvisitArray.includes(`${currentRow},${currentCol + 2}`)) {
+      adjacentCells.push(`${currentRow},${currentCol + 2}`);
+    }
+  }
+
+  // return adjacentCells[Math.floor(adjacentCells.length * Math.random())];
+  return adjacentCells[Math.floor(adjacentCells.length * Math.random())];
 };

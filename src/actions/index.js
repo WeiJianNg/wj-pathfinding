@@ -1,5 +1,9 @@
 import { pathFinding, calculateDistance } from "../script/pathfinding";
-import { recursiveDivision, recursiveBackTrack } from "../script/maze";
+import {
+  recursiveDivision,
+  recursiveBackTrack,
+  primAlgorithm,
+} from "../script/maze";
 import _ from "lodash";
 
 export const getGrid = (window) => {
@@ -239,6 +243,16 @@ export const updateMazeTimeLine2 = (numCol, numRow, startCoord) => {
   };
 };
 
+export const updateMazeTimeLinePrim = (numCol, numRow) => {
+  let unVisitArray = primAlgorithm(numCol, numRow);
+  return {
+    type: "UPDATE_MAZE_TIMELINE_BACK",
+    payload: {
+      unVisitTimeline: unVisitArray,
+    },
+  };
+};
+
 export const recursiveBackTrackInit = (grid) => {
   let updatedGrid = { ...grid };
   Object.keys(updatedGrid).forEach((coord) => {
@@ -254,7 +268,7 @@ export const recursiveBackTrackStartEnd = (unVisitArray, grid) => {
   unVisitArray.sort((a, b) => {
     return calculateDistance("1,1", a) - calculateDistance("1,1", b);
   });
-  let startCoord = "1,1";
+  let startCoord = unVisitArray[0];
   let endCoord = unVisitArray[unVisitArray.length - 1];
   let updatedGrid = { ...grid };
   for (let i = 0; i < unVisitArray.length; i++) {

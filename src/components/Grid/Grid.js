@@ -106,7 +106,7 @@ const Grid = ({
             addMazeWall(grid, mazeTimeline);
             toggleInteraction();
           }
-        }, 10 * i);
+        }, 5 * i);
       }
     }
     // eslint-disable-next-line
@@ -123,7 +123,7 @@ const Grid = ({
               recursiveBackTrackStartEnd(unvisitTimeline, grid);
               toggleInteraction();
             }
-          }, 10 * i);
+          }, 15 * i);
         }
       }, 1000);
     }
