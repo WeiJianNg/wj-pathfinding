@@ -45,7 +45,7 @@ export const pathFinding = (
     // Update distance for nearby nodes
     for (let i = 0; i < nearbyUnvisitedNodes.length; i++) {
       if (
-        grid[currentCell].distance + 1 <
+        grid[currentCell].distance + 1 <=
         grid[nearbyUnvisitedNodes[i]].distance
       ) {
         grid[nearbyUnvisitedNodes[i]].distance = grid[currentCell].distance + 1;

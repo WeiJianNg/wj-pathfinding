@@ -62,7 +62,7 @@ const Row = ({
                 if (!disableKey && !solved) {
                   let coord = event.target.id;
                   addWall(coord, grid);
-                  if (deleteKey) {
+                  if (deleteKey || event.target.className === "wall") {
                     deleteWall(coord, grid);
                   } else if (isMouseDown) {
                     addWall(coord, grid);
@@ -84,14 +84,6 @@ const Row = ({
                     if (event.target.className !== "start") {
                       updateStartEnd("end", start, end, coord, grid);
                     }
-                  }
-                }
-              }}
-              onClick={(event) => {
-                let coord = event.target.id;
-                if (!disableKey) {
-                  if (event.target.className === "wall") {
-                    deleteWall(coord, grid);
                   }
                 }
               }}
