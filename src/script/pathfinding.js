@@ -14,17 +14,22 @@ export const pathFinding = (
       grid[coord].weight = calculateDistance(coord, endCoord);
     });
   }
+
   // Initialisation
   let queue = [];
+
   grid[startCoord].distance = 0;
   grid[startCoord].path = [startCoord];
   queue.push(startCoord);
+
   while (queue.length !== 0) {
     // Sort queue array according to distance
     if (method === "A* Search") {
       // Add Euclidean Distance to guide which nodes to explore first
       queue.sort((a, b) => {
-        return grid[b].weight - grid[a].weight;
+        return (
+          grid[b].distance - grid[a].distance + grid[b].weight - grid[a].weight
+        );
       });
     } else {
       queue.sort((a, b) => {
@@ -83,7 +88,8 @@ export const calculateDistance = (coord1, coord2) => {
   let x2 = parseInt(coord2.split(",")[1]);
   let y2 = parseInt(coord2.split(",")[0]);
 
-  return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+  // return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 };
 
 const findNearbyNodes = (currentCell, numCol, numRow, grid) => {
