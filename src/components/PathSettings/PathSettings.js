@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { connect } from "react-redux";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -34,6 +34,11 @@ const PathSettings = ({
   updateMazeTimeLine2,
   updateMazeTimeLinePrim,
 }) => {
+  let mazetitle = createRef();
+  let updateMazeTitle = (title) => {
+    mazetitle.current.firstChild.innerHTML = title;
+  };
+
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Navbar.Brand bg="dark">PathFinding Visualiser</Navbar.Brand>
@@ -41,7 +46,9 @@ const PathSettings = ({
       <Navbar.Collapse id="basic-navbar-nav">
         <NavDropdown
           title={
-            pathFindingAlgo === null ? "PathFinding Algorithm" : pathFindingAlgo
+            pathFindingAlgo === null
+              ? "Select Pathfinding Algorithm"
+              : pathFindingAlgo
           }
           id="basic-nav-dropdown"
         >
@@ -57,10 +64,14 @@ const PathSettings = ({
               selectPathFindingAlgo("Dijkstra Algorithm");
             }}
           >
-            Dijkstra Shortest Path
+            Breadth First Search (Default)
           </NavDropdown.Item>
         </NavDropdown>
-        <NavDropdown title="Maze Algorithm" id="basic-nav-dropdown">
+        <NavDropdown
+          ref={mazetitle}
+          title="Select Maze Generation Algorithm"
+          id="basic-nav-dropdown"
+        >
           <NavDropdown.Item
             onClick={() => {
               if (!disableKey) {
@@ -68,6 +79,7 @@ const PathSettings = ({
                 toggleSolved(false);
                 recursiveBackTrackInit(grid);
                 updateMazeTimeLine2(numCol, numRow, "1,1");
+                updateMazeTitle("Recursive Backtracking");
               }
             }}
           >
@@ -79,6 +91,7 @@ const PathSettings = ({
                 resetGrid(numRow, numCol, "1,1", `${numRow - 2},${numCol - 2}`);
                 toggleSolved(false);
                 updateMazeTimeLine(numCol, numRow, start, end, null);
+                updateMazeTitle("Recursive Divison");
               }
             }}
           >
@@ -90,6 +103,7 @@ const PathSettings = ({
                 resetGrid(numRow, numCol, "1,1", `${numRow - 2},${numCol - 2}`);
                 toggleSolved(false);
                 updateMazeTimeLine(numCol, numRow, start, end, "vertical");
+                updateMazeTitle("Recursive Division (Vertical Skew)");
               }
             }}
           >
@@ -101,6 +115,7 @@ const PathSettings = ({
                 resetGrid(numRow, numCol, "1,1", `${numRow - 2},${numCol - 2}`);
                 toggleSolved(false);
                 updateMazeTimeLine(numCol, numRow, start, end, "horizontal");
+                updateMazeTitle("Recursive Division (Horizontal Skew)");
               }
             }}
           >
@@ -113,6 +128,7 @@ const PathSettings = ({
                 toggleSolved(false);
                 recursiveBackTrackInit(grid);
                 updateMazeTimeLinePrim(numCol, numRow);
+                updateMazeTitle("Prim's Algorithm");
               }
             }}
           >
